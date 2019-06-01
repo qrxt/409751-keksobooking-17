@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Eugene Kalinowski](https://up.htmlacademy.ru/javascript/17/user/409751).
-* Наставник: `Неизвестно`.
+* Наставник: [Вадим Шевяков](https://up.htmlacademy.ru/javascript/17/user/574589).
 
 ---
 
