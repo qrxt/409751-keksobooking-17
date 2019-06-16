@@ -51,15 +51,14 @@ function getRandomInteger(min, max) {
 }
 
 var fillAnnouncements = function () {
-  return ANNOUNCEMENTS_TITLES.reduce(function (acc, _, i) {
+  return ANNOUNCEMENTS_TITLES.map(function (item, i) {
     var currentType = getRandomArrayItem(HOUSING_TYPES);
     var currentX = getRandomInteger(0, mapPinsArea.offsetWidth - PinSize.WIDTH);
     var currentY = getRandomInteger(MIN_AVAILABLE_Y, MAX_AVAILABLE_Y - PinSize.HEIGHT);
     var currentTitle = ANNOUNCEMENTS_TITLES[i];
 
-    var announcement = generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
-    return acc.concat(announcement);
-  }, []);
+    return generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
+  });
 };
 
 /* Создадим DOM-элементы на основе сгенерированных данных */
