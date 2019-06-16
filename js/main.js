@@ -6,10 +6,8 @@ var PinSize = {
   WIDTH: 50,
   HEIGHT: 70
 };
-
-/* У блока .map уберем класс faded для перехода в активный режим */
-
-map.classList.remove('map--faded'); // временно
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
 
 /* Сгенерируем массив, состоящий из 8 объектов объявлений */
 
@@ -53,21 +51,21 @@ function getRandomInteger(min, max) {
 }
 
 var fillAnnouncements = function () {
-  var announcements = [];
-  for (var i = 1; i < ANNOUNCEMENTS_TITLES.length + 1; i++) {
+  return ANNOUNCEMENTS_TITLES.reduce(function (acc, _, i) {
     var currentType = getRandomArrayItem(HOUSING_TYPES);
     var currentX = getRandomInteger(0, mapPinsArea.offsetWidth - PinSize.WIDTH);
     var currentY = getRandomInteger(MIN_AVAILABLE_Y, MAX_AVAILABLE_Y - PinSize.HEIGHT);
-    var currentTitle = ANNOUNCEMENTS_TITLES[i - 1];
+    var currentTitle = ANNOUNCEMENTS_TITLES[i];
 
-    var announcement = generateAnnouncement(i, currentType, currentTitle, currentX, currentY);
-    announcements.push(announcement);
-  }
-
-  return announcements;
+    var announcement = generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
+    return acc.concat(announcement);
+  }, []);
 };
 
 /* Создадим DOM-элементы на основе сгенерированных данных */
+
+var announcements = fillAnnouncements();
+var fragment = document.createDocumentFragment();
 
 var pinTemplate = document
   .querySelector('#pin')
@@ -86,11 +84,38 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var announcements = fillAnnouncements();
-var fragment = document.createDocumentFragment();
+/* Деактивация инпутов форм по умолчанию */
+var toggleBlocking = function (fieldset) {
+  fieldset.disabled = !fieldset.disabled;
+};
 
-for (var i = 0; i < announcements.length; i++) {
-  fragment.appendChild(renderPin(announcements[i]));
-}
+adFormFieldsets.forEach(toggleBlocking);
 
-mapPinsArea.appendChild(fragment);
+/* Активация страницы */
+var mapPinMain = mapPinsArea.querySelector('.map__pin--main');
+var pinMainClickHandler = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  adFormFieldsets.forEach(toggleBlocking);
+
+  setTimeout(function () {
+    announcements.forEach(function (item) {
+      fragment.appendChild(renderPin(item));
+    });
+    mapPinsArea.appendChild(fragment);
+  }, 100);
+  mapPinMain.removeEventListener('click', pinMainClickHandler);
+};
+
+mapPinMain.addEventListener('click', pinMainClickHandler);
+
+/* Заполнение формы */
+var pinMainCenterX = mapPinMain.offsetLeft + Math.round(mapPinMain.offsetWidth / 2);
+var pinMainBottomY = mapPinMain.offsetTop + mapPinMain.offsetHeight;
+var coordsString = pinMainCenterX + ', ' + pinMainBottomY;
+
+mapPinMain.addEventListener('mouseup', function () {
+  var adFormAddressInput = adForm.querySelector('input[name="address"]');
+  adFormAddressInput.value = coordsString;
+});
+
