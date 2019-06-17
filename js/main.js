@@ -6,6 +6,7 @@ var PinSize = {
   WIDTH: 50,
   HEIGHT: 70
 };
+
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsets = adForm.querySelectorAll('fieldset');
 
@@ -51,15 +52,14 @@ function getRandomInteger(min, max) {
 }
 
 var fillAnnouncements = function () {
-  return ANNOUNCEMENTS_TITLES.reduce(function (acc, _, i) {
+  return ANNOUNCEMENTS_TITLES.map(function (item, i) {
     var currentType = getRandomArrayItem(HOUSING_TYPES);
     var currentX = getRandomInteger(0, mapPinsArea.offsetWidth - PinSize.WIDTH);
     var currentY = getRandomInteger(MIN_AVAILABLE_Y, MAX_AVAILABLE_Y - PinSize.HEIGHT);
     var currentTitle = ANNOUNCEMENTS_TITLES[i];
 
-    var announcement = generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
-    return acc.concat(announcement);
-  }, []);
+    return generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
+  });
 };
 
 /* Создадим DOM-элементы на основе сгенерированных данных */
@@ -119,3 +119,32 @@ mapPinMain.addEventListener('mouseup', function () {
   adFormAddressInput.value = coordsString;
 });
 
+/* Валидация полей формы */
+
+var adFormHousingTypeSelect = adForm.querySelector('select[name="type"]');
+var adFormPriceInput = adForm.querySelector('[name="price"]');
+var adFormTime = adForm.querySelector('.ad-form__element--time');
+var adFormTimeIn = adForm.querySelector('[name="timein"]');
+var adFormTimeOut = adForm.querySelector('[name="timeout"]');
+
+var minPricesByHousingTypes = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+adFormHousingTypeSelect.addEventListener('change', function () {
+  var fittingMinPrice = minPricesByHousingTypes[adFormHousingTypeSelect.value];
+
+  adFormPriceInput.min = fittingMinPrice;
+  adFormPriceInput.placeholder = fittingMinPrice;
+});
+
+adFormTime.addEventListener('change', function (evt) {
+  if (evt.target === adFormTimeIn) {
+    adFormTimeOut.selectedIndex = adFormTimeIn.selectedIndex;
+  } else {
+    adFormTimeIn.selectedIndex = adFormTimeOut.selectedIndex;
+  }
+});
