@@ -123,9 +123,9 @@ mapPinMain.addEventListener('mouseup', function () {
 
 var adFormHousingTypeSelect = adForm.querySelector('select[name="type"]');
 var adFormPriceInput = adForm.querySelector('[name="price"]');
+var adFormTime = adForm.querySelector('.ad-form__element--time');
 var adFormTimeIn = adForm.querySelector('[name="timein"]');
 var adFormTimeOut = adForm.querySelector('[name="timeout"]');
-var testTime = adForm.querySelector('.ad-form__element--time');
 
 var minPricesByHousingTypes = {
   bungalo: 0,
@@ -141,7 +141,7 @@ adFormHousingTypeSelect.addEventListener('change', function () {
   adFormPriceInput.placeholder = fittingMinPrice;
 });
 
-testTime.addEventListener('change', function (evt) {
+adFormTime.addEventListener('change', function (evt) {
   if (evt.target === adFormTimeIn) {
     adFormTimeOut.selectedIndex = adFormTimeIn.selectedIndex;
   } else {
