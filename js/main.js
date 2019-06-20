@@ -161,7 +161,7 @@ mapPinMain.addEventListener('mousedown', function (evt) {
 
     var isOutOfLeftBound = currentX < 0;
     var isOutOfRightBound = currentX > mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
-    var isOutOfTopBound = currentY < 0;
+    var isOutOfTopBound = currentY < (MIN_AVAILABLE_Y - mapPinMain.offsetHeight);
     var bottomBorder = mapPinsArea.offsetHeight - mapPinMain.offsetHeight;
     var isOutOfBottomBound = currentY > bottomBorder;
 
