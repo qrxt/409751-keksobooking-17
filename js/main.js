@@ -135,46 +135,45 @@ adFormTime.addEventListener('change', function (evt) {
 
 /* Drag-n-drop для маркера */
 
+var rightBoundaryX = mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
+
 mapPinMain.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
-  var startCoords = {
+  var cursorStartCoords = {
     x: evt.clientX,
     y: evt.clientY
+  };
+
+  var pinStartCoords = {
+    x: mapPinMain.offsetLeft,
+    y: mapPinMain.offsetTop
   };
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
+    var cursorShift = {
+      x: moveEvt.clientX - cursorStartCoords.x,
+      y: moveEvt.clientY - cursorStartCoords.y
     };
 
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
+    var shiftedPin = {
+      x: pinStartCoords.x + cursorShift.x,
+      y: pinStartCoords.y + cursorShift.y
     };
 
-    var currentX = mapPinMain.offsetLeft - shift.x;
-    var currentY = mapPinMain.offsetTop - shift.y;
+    var isInLeftBoundary = shiftedPin.x > 0 - (mapPinMain.offsetWidth / 2);
+    var isInRightBoundary = shiftedPin.x < rightBoundaryX + mapPinMain.offsetWidth / 2;
+    var isInTopBoundary = shiftedPin.y > MIN_AVAILABLE_Y - mapPinMain.offsetHeight;
+    var isInBottomBoundary = shiftedPin.y < MAX_AVAILABLE_Y;
 
-    var isOutOfLeftBound = currentX < 0;
-    var isOutOfRightBound = currentX > mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
-    var isOutOfTopBound = currentY < (MIN_AVAILABLE_Y - mapPinMain.offsetHeight);
-    var bottomBorder = mapPinsArea.offsetHeight - mapPinMain.offsetHeight;
-    var isOutOfBottomBound = currentY > bottomBorder;
-
-    if (isOutOfLeftBound || isOutOfRightBound) {
-      mapPinMain.style.left = mapPinMain.style.left;
-    } else {
-      mapPinMain.style.left = currentX + 'px';
+    if (isInLeftBoundary && isInRightBoundary) {
+      mapPinMain.style.left = shiftedPin.x + 'px';
     }
 
-    if (isOutOfTopBound || isOutOfBottomBound) {
-      mapPinMain.style.top = mapPinMain.style.top;
-    } else {
-      mapPinMain.style.top = currentY + 'px';
+    if (isInTopBoundary && isInBottomBoundary) {
+      mapPinMain.style.top = shiftedPin.y + 'px';
     }
 
     fillAddressWithCurrentCoords();
@@ -195,6 +194,22 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     }, 100);
 
     fillAddressWithCurrentCoords();
+
+    if (mapPinMain.offsetLeft < 0) {
+      mapPinMain.style.left = 0 + 'px';
+    }
+
+    if (mapPinMain.offsetLeft > rightBoundaryX) {
+      mapPinMain.style.left = rightBoundaryX + 'px';
+    }
+
+    if (mapPinMain.offsetTop < MIN_AVAILABLE_Y - mapPinMain.offsetHeight) {
+      mapPinMain.style.top = MIN_AVAILABLE_Y + 'px';
+    }
+
+    if (mapPinMain.offsetTop > MAX_AVAILABLE_Y) {
+      mapPinMain.style.top = MAX_AVAILABLE_Y + 'px';
+    }
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
