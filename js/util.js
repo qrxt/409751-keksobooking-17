@@ -1,0 +1,30 @@
+'use strict';
+
+(function () {
+  window.util = {
+    map: document.querySelector('.map'),
+    mapPinsArea: document.querySelector('.map__pins'),
+
+    MIN_AVAILABLE_Y: 130,
+    MAX_AVAILABLE_Y: 630,
+    PinSize: {
+      WIDTH: 50,
+      HEIGHT: 70
+    },
+
+    getRandomArrayItem: function (arr) {
+      return arr[Math.round(Math.random() * (arr.length - 1))];
+    },
+    getRandomInteger: function (min, max) {
+      var rand = min + Math.random() * (max + 1 - min);
+      return Math.floor(rand);
+    },
+    makeAvatarPathString: function (index) {
+      var expandedIndex = (index < 10) ? '0' + index : index;
+      return 'img/avatars/user' + expandedIndex + '.png';
+    },
+    toggleBlocking: function (fieldset) {
+      fieldset.disabled = !fieldset.disabled;
+    }
+  };
+})();
