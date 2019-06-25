@@ -39,7 +39,7 @@
       mapPinMain.removeEventListener('mouseup', showElements);
     };
     mapPinMain.addEventListener('mouseup', showElements);
-  }, function (error) {
+  }, function () {
     var fragment = document.createDocumentFragment();
     var errorElement = errorTemplate.cloneNode(true);
 
