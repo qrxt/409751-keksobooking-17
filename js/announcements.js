@@ -5,14 +5,21 @@
   var mapPinsArea = map.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
 
-  var fragment = document.createDocumentFragment();
+  var main = document.querySelector('main');
+
   var pinTemplate = document
     .querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
+  var errorTemplate = document
+    .querySelector('#error')
+    .content
+    .querySelector('.error');
+
   var url = 'https://js.dump.academy/keksobooking/data';
   window.load(url, function (response) {
+    var fragment = document.createDocumentFragment();
     response.forEach(function (announcement) {
       var pinElement = pinTemplate.cloneNode(true);
       var pinElementCover = pinTemplate.querySelector('img');
@@ -32,7 +39,11 @@
       mapPinMain.removeEventListener('mouseup', showElements);
     };
     mapPinMain.addEventListener('mouseup', showElements);
-  }, function () {
-    /* Функциональность при ошибке */
+  }, function (error) {
+    var fragment = document.createDocumentFragment();
+    var errorElement = errorTemplate.cloneNode(true);
+
+    fragment.appendChild(errorElement);
+    main.appendChild(errorElement);
   });
 })();
