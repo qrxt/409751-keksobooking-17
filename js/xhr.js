@@ -11,7 +11,7 @@
       } else {
         onError({
           status: xhr.status,
-          text: xhr.statusText
+          message: xhr.statusText
         });
       }
     });
@@ -19,14 +19,14 @@
     xhr.addEventListener('error', function () {
       onError({
         status: xhr.status,
-        text: xhr.statusText
+        message: xhr.statusText
       });
     });
 
     xhr.addEventListener('timeout', function () {
       onError({
         status: xhr.status,
-        text: xhr.statusText
+        message: xhr.statusText
       });
     });
 
