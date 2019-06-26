@@ -1,66 +1,49 @@
 'use strict';
 
 (function () {
-  var HOUSING_TYPES = ['palace', 'flat', 'house', 'bungalo'];
-  var ANNOUNCEMENTS_TITLES = [
-    'Первое', 'Второе', 'Третье', 'Четвертое',
-    'Пятое', 'Шестое', 'Седьмое', 'Восьмое'
-  ];
+  var map = document.querySelector('.map');
+  var mapPinsArea = map.querySelector('.map__pins');
+  var mapPinMain = document.querySelector('.map__pin--main');
 
-  var generateAnnouncement = function (avatarIndex, type, announcementTitle, x, y) {
-    return {
-      'author': {
-        'avatar': window.util.makeAvatarPathString(avatarIndex),
-        'announcementTitle': announcementTitle
-      },
-      'offer': {
-        'type': type
-      },
-      'location': {
-        x: x + 'px',
-        y: y + 'px'
-      }
-    };
-  };
-
-  var fillAnnouncements = function () {
-    return ANNOUNCEMENTS_TITLES.map(function (item, i) {
-      var currentType = window.util.getRandomArrayItem(HOUSING_TYPES);
-      var currentX = window.util.getRandomInteger(0, window.util.mapPinsArea.offsetWidth - window.util.PinSize.WIDTH);
-      var currentY = window.util.getRandomInteger(window.util.MIN_AVAILABLE_Y, window.util.MAX_AVAILABLE_Y - window.util.PinSize.HEIGHT);
-      var currentTitle = ANNOUNCEMENTS_TITLES[i];
-
-      return generateAnnouncement(i + 1, currentType, currentTitle, currentX, currentY);
-    });
-  };
-
-  /* Создание DOM-элементов */
-
-  var announcements = fillAnnouncements();
-  var fragment = document.createDocumentFragment();
+  var main = document.querySelector('main');
 
   var pinTemplate = document
     .querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-  var renderPin = function (pin) {
-    var pinElement = pinTemplate.cloneNode(true);
-    var pinElementCover = pinElement.querySelector('img');
+  var errorTemplate = document
+    .querySelector('#error')
+    .content
+    .querySelector('.error');
 
-    pinElement.style.left = pin.location.x;
-    pinElement.style.top = pin.location.y;
-    pinElementCover.src = pin.author.avatar;
-    pinElementCover.alt = pin.author.announcementTitle;
+  var url = 'https://js.dump.academy/keksobooking/data';
+  window.load(url, function (response) {
+    var fragment = document.createDocumentFragment();
+    response.forEach(function (announcement) {
+      var pinElement = pinTemplate.cloneNode(true);
+      var pinElementCover = pinTemplate.querySelector('img');
 
-    return pinElement;
-  };
+      pinElement.style.left = announcement.location.x + 'px';
+      pinElement.style.top = announcement.location.y + 'px';
+      pinElementCover.src = announcement.author.avatar;
+      pinElementCover.alt = announcement.offer.title;
 
-  /* Exports */
-  window.util.drawAnnouncements = function () {
-    announcements.forEach(function (item) {
-      fragment.appendChild(renderPin(item));
+      fragment.appendChild(pinElement);
     });
-    window.util.mapPinsArea.appendChild(fragment);
-  };
+
+    var showElements = function () {
+      setTimeout(function () {
+        mapPinsArea.appendChild(fragment);
+      }, 100);
+      mapPinMain.removeEventListener('mouseup', showElements);
+    };
+    mapPinMain.addEventListener('mouseup', showElements);
+  }, function () {
+    var fragment = document.createDocumentFragment();
+    var errorElement = errorTemplate.cloneNode(true);
+
+    fragment.appendChild(errorElement);
+    main.appendChild(errorElement);
+  });
 })();

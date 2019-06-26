@@ -71,9 +71,6 @@
           fieldset.disabled = false;
         }
       });
-      setTimeout(function () {
-        window.util.drawAnnouncements();
-      }, 100);
 
       fillAddressWithCurrentCoords();
 
