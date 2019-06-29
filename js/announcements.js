@@ -5,6 +5,8 @@
   var mapPinsArea = map.querySelector('.map__pins');
 
   var main = document.querySelector('main');
+  var mapPinMain = mapPinsArea.querySelector('.map__pin--main');
+  var mapPinMainText = mapPinMain.querySelector('svg text textpath');
 
   var housingTypeSelect = document.querySelector('select[name="housing-type"]');
 
@@ -28,7 +30,6 @@
 
   var url = 'https://js.dump.academy/keksobooking/data';
   window.load(url, function (announcements) {
-
     var MAX_PINS_QUANTITY = 5;
 
     var renderPin = function (announcement) {
@@ -57,10 +58,17 @@
       return fragment;
     };
 
+    mapPinMainText.textContent = window.mainPinInitialText;
+    mapPinMain.disabled = false;
+
     housingTypeSelect.addEventListener('change', function (evt) {
       var currentType = evt.target.value;
       var filteredPinsFragment = getPinsFragment(function (pin) {
-        return pin.offer.type === currentType;
+        if (currentType === 'any') {
+          return true;
+        } else {
+          return pin.offer.type === currentType;
+        }
       });
       clearPinsArea();
       mapPinsArea.appendChild(filteredPinsFragment);

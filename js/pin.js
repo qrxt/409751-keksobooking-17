@@ -3,7 +3,9 @@
 (function () {
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
+
   var mapPinMain = mapPinsArea.querySelector('.map__pin--main');
+  var mapPinMainText = mapPinMain.querySelector('svg text textpath');
 
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
@@ -18,6 +20,10 @@
     var adFormAddressInput = adForm.querySelector('input[name="address"]');
     adFormAddressInput.value = coordsString;
   };
+
+  window.mainPinInitialText = mapPinMainText.textContent;
+  mapPinMainText.textContent = 'Загрузка объявлений...';
+  mapPinMain.disabled = true;
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
