@@ -3,9 +3,10 @@
 (function () {
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
-  var mapPinMain = document.querySelector('.map__pin--main');
 
   var main = document.querySelector('main');
+
+  var housingTypeSelect = document.querySelector('select[name="housing-type"]');
 
   var pinTemplate = document
     .querySelector('#pin')
@@ -17,10 +18,20 @@
     .content
     .querySelector('.error');
 
+  var clearPinsArea = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    pins.forEach(function (pin) {
+      mapPinsArea.removeChild(pin);
+    });
+  };
+
   var url = 'https://js.dump.academy/keksobooking/data';
-  window.load(url, function (response) {
-    var fragment = document.createDocumentFragment();
-    response.forEach(function (announcement) {
+  window.load(url, function (announcements) {
+
+    var MAX_PINS_QUANTITY = 5;
+
+    var renderPin = function (announcement) {
       var pinElement = pinTemplate.cloneNode(true);
       var pinElementCover = pinTemplate.querySelector('img');
 
@@ -29,21 +40,39 @@
       pinElementCover.src = announcement.author.avatar;
       pinElementCover.alt = announcement.offer.title;
 
-      fragment.appendChild(pinElement);
+      return pinElement;
+    };
+
+    var getPinsFragment = function (filterFunc) {
+      var fragment = document.createDocumentFragment();
+      var filteredAnnouncements = filterFunc ? announcements.filter(filterFunc) : announcements;
+
+      filteredAnnouncements
+        .slice(0, MAX_PINS_QUANTITY)
+        .forEach(function (announcement) {
+          var renderedPin = renderPin(announcement);
+          fragment.appendChild(renderedPin);
+        });
+
+      return fragment;
+    };
+
+    housingTypeSelect.addEventListener('change', function (evt) {
+      var currentType = evt.target.value;
+      var filteredPinsFragment = getPinsFragment(function (pin) {
+        return pin.offer.type === currentType;
+      });
+      clearPinsArea();
+      mapPinsArea.appendChild(filteredPinsFragment);
     });
 
-    var showElements = function () {
-      setTimeout(function () {
-        mapPinsArea.appendChild(fragment);
-      }, 100);
-      mapPinMain.removeEventListener('mouseup', showElements);
-    };
-    mapPinMain.addEventListener('mouseup', showElements);
+    /* Exports */
+    window.initialPinsFragment = getPinsFragment();
   }, function () {
-    var fragment = document.createDocumentFragment();
+    var errorFragment = document.createDocumentFragment();
     var errorElement = errorTemplate.cloneNode(true);
 
-    fragment.appendChild(errorElement);
+    errorFragment.appendChild(errorElement);
     main.appendChild(errorElement);
   });
 })();

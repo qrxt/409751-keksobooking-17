@@ -94,6 +94,13 @@
       document.removeEventListener('mouseup', onMouseUp);
     };
 
+    var drawPins = function () {
+      mapPinsArea.appendChild(window.initialPinsFragment);
+      mapPinMain.removeEventListener('mouseup', drawPins);
+    };
+
+    mapPinMain.addEventListener('mouseup', drawPins);
+
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
