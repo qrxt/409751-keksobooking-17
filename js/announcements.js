@@ -34,7 +34,7 @@
 
     var renderPin = function (announcement) {
       var pinElement = pinTemplate.cloneNode(true);
-      var pinElementCover = pinTemplate.querySelector('img');
+      var pinElementCover = pinElement.querySelector('img');
 
       pinElement.style.left = announcement.location.x + 'px';
       pinElement.style.top = announcement.location.y + 'px';
@@ -47,7 +47,6 @@
     var getPinsFragment = function (filterFunc) {
       var fragment = document.createDocumentFragment();
       var filteredAnnouncements = filterFunc ? announcements.filter(filterFunc) : announcements;
-
       filteredAnnouncements
         .slice(0, MAX_PINS_QUANTITY)
         .forEach(function (announcement) {
@@ -62,6 +61,7 @@
     mapPinMain.disabled = false;
 
     housingTypeSelect.addEventListener('change', function (evt) {
+      clearPinsArea();
       var currentType = evt.target.value;
       var filteredPinsFragment = getPinsFragment(function (pin) {
         if (currentType === 'any') {
@@ -70,7 +70,6 @@
           return pin.offer.type === currentType;
         }
       });
-      clearPinsArea();
       mapPinsArea.appendChild(filteredPinsFragment);
     });
 
