@@ -6,7 +6,7 @@
 
   var main = document.querySelector('main');
   var mapPinMain = mapPinsArea.querySelector('.map__pin--main');
-  var mapPinMainText = mapPinMain.querySelector('svg text textpath');
+  var mapPinMainText = mapPinMain.querySelector('svg text');
 
   var housingTypeSelect = document.querySelector('select[name="housing-type"]');
 
@@ -57,7 +57,7 @@
       return fragment;
     };
 
-    mapPinMainText.textContent = window.mainPinInitialText;
+    mapPinMainText.innerHTML = window.initialMainPinText;
     mapPinMain.disabled = false;
 
     housingTypeSelect.addEventListener('change', function (evt) {
