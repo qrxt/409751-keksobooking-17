@@ -25,6 +25,16 @@
     },
     toggleBlocking: function (fieldset) {
       fieldset.disabled = !fieldset.disabled;
+    },
+    pipe: function () {
+      var innerArgs = arguments;
+      return function (data) {
+        return Array
+          .from(innerArgs)
+          .reduce(function (acc, currentFunc) {
+            return currentFunc(acc);
+          }, data);
+      };
     }
   };
 })();

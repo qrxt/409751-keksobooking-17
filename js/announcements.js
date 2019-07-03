@@ -9,6 +9,7 @@
   var mapPinMainText = mapPinMain.querySelector('svg text');
 
   var housingTypeSelect = document.querySelector('select[name="housing-type"]');
+  var housingRoomsSelect = document.querySelector('select[name="housing-rooms"]');
 
   var pinTemplate = document
     .querySelector('#pin')
@@ -44,10 +45,9 @@
       return pinElement;
     };
 
-    var getPinsFragment = function (filterFunc) {
+    var getPinsFragment = function (currentAnnouncements) {
       var fragment = document.createDocumentFragment();
-      var filteredAnnouncements = filterFunc ? announcements.filter(filterFunc) : announcements;
-      filteredAnnouncements
+      currentAnnouncements
         .slice(0, MAX_PINS_QUANTITY)
         .forEach(function (announcement) {
           var renderedPin = renderPin(announcement);
@@ -60,21 +60,47 @@
     mapPinMainText.innerHTML = window.initialMainPinText;
     mapPinMain.disabled = false;
 
-    housingTypeSelect.addEventListener('change', function (evt) {
-      clearPinsArea();
-      var currentType = evt.target.value;
-      var filteredPinsFragment = getPinsFragment(function (pin) {
-        if (currentType === 'any') {
-          return true;
-        } else {
-          return pin.offer.type === currentType;
-        }
+    var filterControls = [
+      housingTypeSelect,
+      housingRoomsSelect
+    ];
+
+    var filterByType = function (data) {
+      var currentControlValue = housingTypeSelect.value;
+      if (currentControlValue === 'any') {
+        return data;
+      }
+      return data.filter(function (announcement) {
+        return announcement.offer.type === currentControlValue;
       });
-      mapPinsArea.appendChild(filteredPinsFragment);
+    };
+
+    var filterByRooms = function (data) {
+      var currentControlValue = housingRoomsSelect.value;
+      if (currentControlValue === 'any') {
+        return data;
+      }
+      return data.filter(function (announcement) {
+        return announcement.offer.rooms === Number(currentControlValue);
+      });
+    };
+
+    var applyAllFilters = window.util.pipe(
+        filterByType,
+        filterByRooms
+    );
+
+    filterControls.forEach(function (control) {
+      control.addEventListener('change', function () {
+        var filteredAnnouncements = applyAllFilters(announcements);
+
+        clearPinsArea();
+        mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
+      });
     });
 
     /* Exports */
-    window.initialPinsFragment = getPinsFragment();
+    window.initialPinsFragment = getPinsFragment(announcements);
   }, function () {
     var errorFragment = document.createDocumentFragment();
     var errorElement = errorTemplate.cloneNode(true);
