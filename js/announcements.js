@@ -145,21 +145,8 @@
         filterByFeatures
     );
 
-    /*
-    filterControls.forEach(function (control) {
-      control.addEventListener('change', function () {
-        var filteredAnnouncements = applyAllFilters(announcements);
-
-        clearPinsArea();
-        mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
-      });
-    });
-    */
-
-    /* Testin ... */
-
-    var allInOne = document.querySelectorAll('.map__filter, .map__checkbox');
-    allInOne.forEach(function (filter) {
+    var announcementsFilters = document.querySelectorAll('.map__filter, .map__checkbox');
+    announcementsFilters.forEach(function (filter) {
       filter.addEventListener('change', function () {
         var filteredAnnouncements = applyAllFilters(announcements);
 
