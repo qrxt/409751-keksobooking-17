@@ -17,14 +17,7 @@
   var housingPriceSelect = filtersContainer.querySelector('select[name="housing-price"]');
   var housingGuestsSelect = filtersContainer.querySelector('select[name="housing-guests"]');
 
-  var housingFeatures = [
-    filtersContainer.querySelector('#filter-wifi'),
-    filtersContainer.querySelector('#filter-dishwasher'),
-    filtersContainer.querySelector('#filter-parking'),
-    filtersContainer.querySelector('#filter-washer'),
-    filtersContainer.querySelector('#filter-elevator'),
-    filtersContainer.querySelector('#filter-conditioner')
-  ];
+  var housingFeatures = filtersContainer.querySelectorAll('.map__checkbox');
 
   var pinTemplate = document
     .querySelector('#pin')
@@ -125,12 +118,14 @@
     };
 
     var filterByFeatures = function (data) {
-      var currentFeatures = housingFeatures.reduce(function (acc, feature) {
-        if (feature.checked) {
-          return acc.concat(feature.value);
-        }
-        return acc;
-      }, []);
+      var currentFeatures = Array
+        .from(housingFeatures)
+        .reduce(function (acc, feature) {
+          if (feature.checked) {
+            return acc.concat(feature.value);
+          }
+          return acc;
+        }, []);
 
       return data.filter(function (announcement) {
         return window.util.includesArr(announcement.offer.features, currentFeatures);
