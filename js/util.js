@@ -35,6 +35,16 @@
             return currentFunc(acc);
           }, data);
       };
+    },
+    inRange: function (low, high) {
+      return function (value) {
+        return value >= low && value <= high;
+      };
+    },
+    includesArr: function (haystack, needle) {
+      return needle.every(function (item) {
+        return haystack.indexOf(item) > -1;
+      });
     }
   };
 })();
