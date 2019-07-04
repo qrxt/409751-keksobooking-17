@@ -108,12 +108,22 @@
     this._photos.appendChild(this._constructPhotosList());
 
     var closeBtn = this.element.querySelector('.popup__close');
-    var removeSelf = function () {
+    var onClickClose = function () {
       context._parent.removeChild(context.element);
-      closeBtn.removeEventListener('click', removeSelf);
+      closeBtn.removeEventListener('click', onClickClose);
+    };
+    var onEscClose = function (evt) {
+      if (evt.keyCode === 27) {
+        var cards = context._parent.querySelectorAll('.map__card');
+        cards.forEach(function (card) {
+          context._parent.removeChild(card);
+        });
+        document.removeEventListener('keydown', onEscClose);
+      }
     };
 
-    closeBtn.addEventListener('click', removeSelf);
+    closeBtn.addEventListener('click', onClickClose);
+    document.addEventListener('keydown', onEscClose);
 
     return this.element;
   };
