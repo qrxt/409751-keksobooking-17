@@ -59,6 +59,15 @@
         .slice(0, MAX_PINS_QUANTITY)
         .forEach(function (announcement) {
           var renderedPin = renderPin(announcement);
+          renderedPin.addEventListener('click', function () {
+            var cards = mapPinsArea.querySelectorAll('.map__card');
+            cards.forEach(function (card) {
+              mapPinsArea.removeChild(card);
+            });
+            mapPinsArea.appendChild(
+                new window.Card(announcement).render()
+            );
+          });
           fragment.appendChild(renderedPin);
         });
 
