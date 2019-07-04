@@ -4,23 +4,24 @@
 
 (function () {
   var Card = function (announcement) {
-    this.template = document
+    this.announcement = announcement;
+    this._template = document
       .querySelector('#card')
       .content
       .querySelector('.map__card');
-    this.announcement = announcement;
 
-    this.element = this.template.cloneNode(true);
-    this.title = this.element.querySelector('.popup__title');
-    this.address = this.element.querySelector('.popup__text--address');
-    this.price = this.element.querySelector('.popup__text--price');
-    this.type = this.element.querySelector('.popup__type');
-    this.capacity = this.element.querySelector('.popup__text--capacity');
-    this.time = this.element.querySelector('.popup__text--time');
-    this.features = this.element.querySelector('.popup__features');
-    this.description = this.element.querySelector('.popup__description');
-    this.photos = this.element.querySelector('.popup__photos');
-    this.avatar = this.element.querySelector('.popup__avatar');
+    this._parent = document.querySelector('.map__pins');
+    this.element = this._template.cloneNode(true);
+    this._title = this.element.querySelector('.popup__title');
+    this._address = this.element.querySelector('.popup__text--address');
+    this._price = this.element.querySelector('.popup__text--price');
+    this._type = this.element.querySelector('.popup__type');
+    this._capacity = this.element.querySelector('.popup__text--capacity');
+    this._time = this.element.querySelector('.popup__text--time');
+    this._features = this.element.querySelector('.popup__features');
+    this._description = this.element.querySelector('.popup__description');
+    this._photos = this.element.querySelector('.popup__photos');
+    this._avatar = this.element.querySelector('.popup__avatar');
 
     this.announcementTypes = {
       flat: 'Квартира',
@@ -81,26 +82,38 @@
   };
 
   Card.prototype.render = function () {
-    this.title.textContent = this.announcement.offer.title;
-    this.address.textContent = this.announcement.offer.address;
-    this.price.textContent = this.announcement.offer.price + '₽/ночь';
-    this.type.textContent = this.announcementTypes[this.announcement.offer.type];
-    this.capacity.textContent = this._constructCapacityString();
-    this.time.textContent = this._constructTimeString();
-    this.description.textContent = this.announcement.offer.description;
-    this.avatar.src = this.announcement.author.avatar;
+    this._title.textContent = this.announcement.offer.title;
+    this._address.textContent = this.announcement.offer.address;
+    this._price.textContent = this.announcement.offer.price + '₽/ночь';
+    this._type.textContent = this.announcementTypes[this.announcement.offer.type];
+    this._capacity.textContent = this._constructCapacityString();
+    this._time.textContent = this._constructTimeString();
+    this._description.textContent = this.announcement.offer.description;
+    this._avatar.src = this.announcement.author.avatar;
     var context = this;
 
-    this.features.querySelectorAll('.popup__feature').forEach(function (feature) {
-      context.features.removeChild(feature);
-    });
-    this.features.appendChild(this._constructFeaturesList());
+    this._features
+      .querySelectorAll('.popup__feature')
+      .forEach(function (feature) {
+        context._features.removeChild(feature);
+      });
+    this._features.appendChild(this._constructFeaturesList());
 
 
-    this.photos.querySelectorAll('.popup__photo').forEach(function (photo) {
-      context.photos.removeChild(photo);
-    });
-    this.photos.appendChild(this._constructPhotosList());
+    this._photos
+      .querySelectorAll('.popup__photo')
+      .forEach(function (photo) {
+        context._photos.removeChild(photo);
+      });
+    this._photos.appendChild(this._constructPhotosList());
+
+    var closeBtn = this.element.querySelector('.popup__close');
+    var removeSelf = function () {
+      context._parent.removeChild(context.element);
+      closeBtn.removeEventListener('click', removeSelf);
+    };
+
+    closeBtn.addEventListener('click', removeSelf);
 
     return this.element;
   };

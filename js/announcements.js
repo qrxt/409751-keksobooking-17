@@ -19,11 +19,6 @@
 
   var housingFeatures = filtersContainer.querySelectorAll('.map__checkbox');
 
-  var pinTemplate = document
-    .querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
-
   var errorTemplate = document
     .querySelector('#error')
     .content
@@ -37,36 +32,29 @@
     });
   };
 
+  var clearCardsArea = function () {
+    var cards = mapPinsArea.querySelectorAll('.map__card');
+    cards.forEach(function (card) {
+      mapPinsArea.removeChild(card);
+    });
+  };
+
   var url = 'https://js.dump.academy/keksobooking/data';
   window.load(url, function (announcements) {
     var MAX_PINS_QUANTITY = 5;
-
-    var renderPin = function (announcement) {
-      var pinElement = pinTemplate.cloneNode(true);
-      var pinElementCover = pinElement.querySelector('img');
-
-      pinElement.style.left = announcement.location.x + 'px';
-      pinElement.style.top = announcement.location.y + 'px';
-      pinElementCover.src = announcement.author.avatar;
-      pinElementCover.alt = announcement.offer.title;
-
-      return pinElement;
-    };
 
     var getPinsFragment = function (currentAnnouncements) {
       var fragment = document.createDocumentFragment();
       currentAnnouncements
         .slice(0, MAX_PINS_QUANTITY)
         .forEach(function (announcement) {
-          var renderedPin = renderPin(announcement);
+          var pin = new window.Pin(announcement);
+          var renderedPin = pin.render();
           renderedPin.addEventListener('click', function () {
-            var cards = mapPinsArea.querySelectorAll('.map__card');
-            cards.forEach(function (card) {
-              mapPinsArea.removeChild(card);
-            });
-            mapPinsArea.appendChild(
-                new window.Card(announcement).render()
-            );
+            var card = new window.Card(announcement);
+
+            clearCardsArea();
+            mapPinsArea.appendChild(card.render());
           });
           fragment.appendChild(renderedPin);
         });
