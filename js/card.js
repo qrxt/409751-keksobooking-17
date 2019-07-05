@@ -115,7 +115,7 @@
       closeBtn.removeEventListener('click', onClickClose);
     };
     var onEscClose = function (evt) {
-      if (evt.keyCode === window.KeyCodes.ESC) {
+      if (evt.keyCode === window.util.KeyCodes.ESC) {
         var cards = context._parent.querySelectorAll('.map__card');
         cards.forEach(function (card) {
           context._parent.removeChild(card);

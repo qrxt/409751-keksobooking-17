@@ -8,7 +8,7 @@
     MIN_AVAILABLE_Y: 130,
     MAX_AVAILABLE_Y: 630,
     KeyCodes: {
-      'ESC': 27
+      ESC: 27
     },
     PinSize: {
       WIDTH: 50,
