@@ -25,6 +25,26 @@
     },
     toggleBlocking: function (fieldset) {
       fieldset.disabled = !fieldset.disabled;
+    },
+    pipe: function () {
+      var innerArgs = arguments;
+      return function (data) {
+        return Array
+          .from(innerArgs)
+          .reduce(function (acc, currentFunc) {
+            return currentFunc(acc);
+          }, data);
+      };
+    },
+    inRange: function (low, high) {
+      return function (value) {
+        return value >= low && value <= high;
+      };
+    },
+    includesArr: function (haystack, needle) {
+      return needle.every(function (item) {
+        return haystack.indexOf(item) > -1;
+      });
     }
   };
 })();
