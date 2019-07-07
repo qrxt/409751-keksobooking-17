@@ -65,10 +65,12 @@
 
   Card.prototype._constructPhotosList = function () {
     var constructPhotoElement = function (photoSrc) {
+      var PHOTO_PREVIEW_WIDTH = '45';
+      var PHOTO_PREVIEW_HEIGHT = '40';
       var photoElement = document.createElement('img');
       photoElement.src = photoSrc;
-      photoElement.width = '45';
-      photoElement.height = '40';
+      photoElement.width = PHOTO_PREVIEW_WIDTH;
+      photoElement.height = PHOTO_PREVIEW_HEIGHT;
 
       return photoElement;
     };
@@ -113,7 +115,7 @@
       closeBtn.removeEventListener('click', onClickClose);
     };
     var onEscClose = function (evt) {
-      if (evt.keyCode === 27) {
+      if (evt.keyCode === window.util.KeyCodes.ESC) {
         var cards = context._parent.querySelectorAll('.map__card');
         cards.forEach(function (card) {
           context._parent.removeChild(card);
