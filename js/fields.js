@@ -20,6 +20,8 @@
 
   var adFormSubmitBtn = adForm.querySelector('.ad-form__submit');
 
+  var resetBtn = document.querySelector('.ad-form__reset');
+
   var errorTemplate = document
     .querySelector('#error')
     .content
@@ -166,4 +168,8 @@
       adForm.reportValidity();
     }
   });
+
+  /* Мануальный сброс состояния страницы */
+
+  resetBtn.addEventListener('click', resetPageState);
 })();

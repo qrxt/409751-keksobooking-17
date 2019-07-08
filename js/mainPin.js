@@ -23,10 +23,14 @@
     adFormAddressInput.value = coordsString;
   };
 
+  /* Блокировка главного пина до загрузки данных с сервера */
+
   window.initialMainPinText = mapPinMainText.innerHTML;
   mapPinMainText.innerHTML = '<textPath xlink:href="#tophalf" startOffset="0">Загрузка объявлений...</textPath>';
 
   mapPinMain.disabled = true;
+
+  /* Drag-n-drop для пина */
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -114,12 +118,10 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var resetMainPinPosition = function () {
+  /* Exports */
+  window.resetMainPinPosition = function () {
     mapPinMain.style.left = mapPinMainStartX + 'px';
     mapPinMain.style.top = mapPinMainStartY + 'px';
     fillAddressWithCurrentCoords();
   };
-
-  /* Exports */
-  window.resetMainPinPosition = resetMainPinPosition;
 })();
