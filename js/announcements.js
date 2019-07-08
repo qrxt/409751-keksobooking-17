@@ -2,6 +2,7 @@
 
 (function () {
   var MAX_ANNOUNCEMENT_PRICE = 1000000;
+  var DEBOUNCE_INTERVAL = 500;
 
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
@@ -131,11 +132,19 @@
         filterByFeatures
     );
 
+    /* */
+    var lastTimeout;
+    /* */
     var drawFilteredAnnouncements = function () {
       var filteredAnnouncements = applyAllFilters(announcements);
 
       clearPinsArea();
-      mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
+      }, DEBOUNCE_INTERVAL);
     };
 
     var announcementsFilters = document.querySelectorAll('.map__filter, .map__checkbox');
