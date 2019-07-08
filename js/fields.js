@@ -122,7 +122,7 @@
     evt.preventDefault();
     if (adForm.checkValidity()) {
       var data = new FormData(document.querySelector('.ad-form'));
-      // data.append('address', document.querySelector('.ad-form #address').value);
+      data.append('address', document.querySelector('.ad-form #address').value);
 
       var url = 'https://js.dump.academy/keksobooking';
       var send = window.request('POST', url, data);
