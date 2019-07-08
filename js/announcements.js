@@ -32,15 +32,9 @@
     });
   };
 
-  var clearCardsArea = function () {
-    var cards = mapPinsArea.querySelectorAll('.map__card');
-    cards.forEach(function (card) {
-      mapPinsArea.removeChild(card);
-    });
-  };
-
-  var url = 'https://js.dump.academy/keksobooking/data';
-  window.load(url, function (announcements) {
+  var announcementsUrl = 'https://js.dump.academy/keksobooking/data';
+  var load = window.request('GET', announcementsUrl);
+  load(function (announcements) {
     var MAX_PINS_QUANTITY = 5;
 
     var getPinsFragment = function (currentAnnouncements) {
@@ -53,7 +47,7 @@
           renderedPin.addEventListener('click', function () {
             var card = new window.Card(announcement);
 
-            clearCardsArea();
+            window.clearCardsArea();
             mapPinsArea.appendChild(card.render());
           });
           fragment.appendChild(renderedPin);
@@ -137,18 +131,24 @@
         filterByFeatures
     );
 
+    var drawFilteredAnnouncements = function () {
+      var filteredAnnouncements = applyAllFilters(announcements);
+
+      clearPinsArea();
+      mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
+    };
+
     var announcementsFilters = document.querySelectorAll('.map__filter, .map__checkbox');
     announcementsFilters.forEach(function (filter) {
       filter.addEventListener('change', function () {
-        var filteredAnnouncements = applyAllFilters(announcements);
-
-        clearPinsArea();
-        mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
+        drawFilteredAnnouncements();
       });
     });
 
     /* Exports */
+    window.clearPinsArea = clearPinsArea;
     window.initialPinsFragment = getPinsFragment(announcements);
+    window.drawFilteredAnnouncements = drawFilteredAnnouncements;
   }, function () {
     var errorFragment = document.createDocumentFragment();
     var errorElement = errorTemplate.cloneNode(true);

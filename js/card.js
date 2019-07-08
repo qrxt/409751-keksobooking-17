@@ -1,8 +1,9 @@
 'use strict';
 
-/* Изолировать неиспользуемые извне свойства */
-
 (function () {
+  var map = document.querySelector('.map');
+  var mapPinsArea = map.querySelector('.map__pins');
+
   var Card = function (announcement) {
     this.announcement = announcement;
     this._template = document
@@ -130,6 +131,14 @@
     return this.element;
   };
 
+  var clearCardsArea = function () {
+    var cards = mapPinsArea.querySelectorAll('.map__card');
+    cards.forEach(function (card) {
+      mapPinsArea.removeChild(card);
+    });
+  };
+
   /* Exports */
   window.Card = Card;
+  window.clearCardsArea = clearCardsArea;
 })();

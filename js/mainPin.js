@@ -5,6 +5,8 @@
   var mapPinsArea = map.querySelector('.map__pins');
 
   var mapPinMain = mapPinsArea.querySelector('.map__pin--main');
+  var mapPinMainStartX = mapPinMain.offsetLeft;
+  var mapPinMainStartY = mapPinMain.offsetTop;
   var mapPinMainText = mapPinMain.querySelector('svg text');
 
   var adForm = document.querySelector('.ad-form');
@@ -23,6 +25,7 @@
 
   window.initialMainPinText = mapPinMainText.innerHTML;
   mapPinMainText.innerHTML = '<textPath xlink:href="#tophalf" startOffset="0">Загрузка объявлений...</textPath>';
+
   mapPinMain.disabled = true;
 
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -101,7 +104,7 @@
     };
 
     var drawPins = function () {
-      mapPinsArea.appendChild(window.initialPinsFragment);
+      window.drawFilteredAnnouncements();
       mapPinMain.removeEventListener('mouseup', drawPins);
     };
 
@@ -110,4 +113,13 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var resetMainPinPosition = function () {
+    mapPinMain.style.left = mapPinMainStartX + 'px';
+    mapPinMain.style.top = mapPinMainStartY + 'px';
+    fillAddressWithCurrentCoords();
+  };
+
+  /* Exports */
+  window.resetMainPinPosition = resetMainPinPosition;
 })();

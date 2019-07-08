@@ -2,9 +2,6 @@
 
 (function () {
   window.util = {
-    map: document.querySelector('.map'),
-    mapPinsArea: document.querySelector('.map__pins'),
-
     MIN_AVAILABLE_Y: 130,
     MAX_AVAILABLE_Y: 630,
     KeyCodes: {
