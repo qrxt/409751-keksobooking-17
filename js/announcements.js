@@ -138,11 +138,11 @@
     var drawFilteredAnnouncements = function () {
       var filteredAnnouncements = applyAllFilters(announcements);
 
-      clearPinsArea();
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(function () {
+        clearPinsArea();
         mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
       }, DEBOUNCE_INTERVAL);
     };
