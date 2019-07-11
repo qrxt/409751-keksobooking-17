@@ -46,6 +46,16 @@
       return needle.every(function (item) {
         return haystack.indexOf(item) > -1;
       });
+    },
+    debounce: function (func, time) {
+      var lastTimeout;
+
+      return function () {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = setTimeout(func, time);
+      };
     }
   };
 })();

@@ -132,25 +132,18 @@
         filterByFeatures
     );
 
-    /* */
-    var lastTimeout;
-    /* */
     var drawFilteredAnnouncements = function () {
       var filteredAnnouncements = applyAllFilters(announcements);
 
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(function () {
-        clearPinsArea();
-        mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
-      }, DEBOUNCE_INTERVAL);
+      clearPinsArea();
+      mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
     };
 
+    var debouncedDrawFilteredAnnouncements = window.util.debounce(drawFilteredAnnouncements, DEBOUNCE_INTERVAL);
     var announcementsFilters = document.querySelectorAll('.map__filter, .map__checkbox');
     announcementsFilters.forEach(function (filter) {
       filter.addEventListener('change', function () {
-        drawFilteredAnnouncements();
+        debouncedDrawFilteredAnnouncements();
       });
     });
 
