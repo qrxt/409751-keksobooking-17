@@ -2,6 +2,7 @@
 
 (function () {
   var NOT_FOR_GUESTS = 0;
+  var FILE_TYPES = ['image/gif', 'image/jpeg', 'image/pjpeg', 'image/png'];
 
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
@@ -16,6 +17,8 @@
   var adFormTimeIn = adForm.querySelector('[name="timein"]');
   var adFormTimeOut = adForm.querySelector('[name="timeout"]');
   var adFormDescriptionTextarea = adForm.querySelector('#description');
+
+  var adFormAvatarImage = document.querySelector('.ad-form-header__preview img');
 
   var adFormRoomsSelect = adForm.querySelector('select[name="rooms"]');
   var adFormCapacitySelect = adForm.querySelector('select[name="capacity"]');
@@ -98,6 +101,7 @@
   /* Отправка данных из формы на сервер */
 
   var resetInputsState = function () {
+    adFormAvatarImage.src = 'img/muffin-grey.svg';
     adFormTitleInput.value = '';
     adFormPriceInput.value = '';
     adFormDescriptionTextarea.value = '';
@@ -173,4 +177,61 @@
   /* Мануальный сброс состояния страницы */
 
   resetBtn.addEventListener('click', resetPageState);
+
+  /* Загрузка аватара */
+
+  var fileChooser = document.querySelector('.ad-form-header__input');
+
+  var uploadFile = function (file, toDoCallback) {
+    if (file && FILE_TYPES.includes(file.type)) {
+      var fileReader = new FileReader();
+
+      fileReader.addEventListener('load', toDoCallback);
+
+      fileReader.readAsDataURL(file);
+    }
+  };
+
+  fileChooser.addEventListener('change', function () {
+    var file = fileChooser.files[0];
+
+    uploadFile(file, function (evt) {
+      adFormAvatarImage.src = evt.target.result;
+    });
+  });
+
+  /* Drag-n-drop загрузка аватарки */
+
+  var avatarDropArea = document.querySelector('.ad-form-header__drop-zone');
+
+  var preventDragNDropDefaults = function (dropArea) {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (evtName) {
+      dropArea.addEventListener(evtName, function (evt) {
+        evt.preventDefault();
+      });
+    });
+  };
+
+  preventDragNDropDefaults(avatarDropArea);
+  avatarDropArea.addEventListener('drop', function (evt) {
+    var file = evt.dataTransfer.files[0];
+
+    uploadFile(file, function (loadEvt) {
+      adFormAvatarImage.src = loadEvt.target.result;
+    });
+  });
+
+  /* Drag-n-drop загрузка аватарки WIP */
+
+  var housingImagesDropArea = document.querySelector('.ad-form__drop-zone');
+  var housingImagesAreaTest = document.querySelector('.ad-form__photo');
+
+  preventDragNDropDefaults(housingImagesDropArea);
+  housingImagesDropArea.addEventListener('drop', function (evt) {
+    var file = evt.dataTransfer.files[0];
+
+    uploadFile(file, function (loadEvt) {
+      housingImagesAreaTest.style.backgroundImage = loadEvt.target.result;
+    });
+  });
 })();
