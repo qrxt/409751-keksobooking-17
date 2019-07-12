@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var PHOTO_PREVIEW_WIDTH = '45';
+  var PHOTO_PREVIEW_HEIGHT = '40';
+
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
 
@@ -66,8 +69,6 @@
 
   Card.prototype._constructPhotosList = function () {
     var constructPhotoElement = function (photoSrc) {
-      var PHOTO_PREVIEW_WIDTH = '45';
-      var PHOTO_PREVIEW_HEIGHT = '40';
       var photoElement = document.createElement('img');
       photoElement.src = photoSrc;
       photoElement.width = PHOTO_PREVIEW_WIDTH;

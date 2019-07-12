@@ -2,7 +2,6 @@
 
 (function () {
   var XHR_TIMEOUT_IN_MS = 10000;
-
   var XHR_STATUS_OK = 200;
 
   window.request = function (method, url, data) {

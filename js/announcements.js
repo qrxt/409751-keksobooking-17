@@ -3,6 +3,7 @@
 (function () {
   var MAX_ANNOUNCEMENT_PRICE = 1000000;
   var DEBOUNCE_INTERVAL = 500;
+  var MAX_PINS_QUANTITY = 5;
 
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
@@ -36,8 +37,6 @@
   var announcementsUrl = 'https://js.dump.academy/keksobooking/data';
   var load = window.request('GET', announcementsUrl);
   load(function (announcements) {
-    var MAX_PINS_QUANTITY = 5;
-
     var getPinsFragment = function (currentAnnouncements) {
       var fragment = document.createDocumentFragment();
       currentAnnouncements

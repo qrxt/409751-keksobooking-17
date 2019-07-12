@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var NOT_FOR_GUESTS = 0;
+
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
 
@@ -58,7 +60,6 @@
 
   /* Валидация соотношения количества мест и гостей */
   var validateRoomsQuantityToCapacity = function () {
-    var NOT_FOR_GUESTS = 0;
     var roomsQuantityToCapacityRatios = {
       1: [1],
       2: [1, 2],
