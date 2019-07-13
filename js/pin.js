@@ -11,17 +11,17 @@
 
     this._parent = document.querySelector('.map__pins');
     this.element = this._template.cloneNode(true);
+  };
 
-    this.render = function () {
-      var pinElementCover = this.element.querySelector('img');
+  Pin.prototype.render = function () {
+    var pinElementCover = this.element.querySelector('img');
 
-      this.element.style.left = this._announcement.location.x + 'px';
-      this.element.style.top = this._announcement.location.y + 'px';
-      pinElementCover.src = this._announcement.author.avatar;
-      pinElementCover.alt = this._announcement.offer.title;
+    this.element.style.left = this._announcement.location.x + 'px';
+    this.element.style.top = this._announcement.location.y + 'px';
+    pinElementCover.src = this._announcement.author.avatar;
+    pinElementCover.alt = this._announcement.offer.title;
 
-      return this.element;
-    };
+    return this.element;
   };
 
   /* Exports */

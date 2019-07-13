@@ -12,6 +12,7 @@
       WIDTH: 50,
       HEIGHT: 70
     },
+    FILE_TYPES: ['image/gif', 'image/jpeg', 'image/pjpeg', 'image/png'],
 
     getRandomArrayItem: function (arr) {
       return arr[Math.round(Math.random() * (arr.length - 1))];
@@ -56,6 +57,23 @@
         }
         lastTimeout = setTimeout(func, time);
       };
+    },
+    preventDragNDropDefaults: function (dropArea) {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (evtName) {
+        dropArea.addEventListener(evtName, function (evt) {
+          evt.preventDefault();
+        });
+      });
+    },
+    uploadFile: function (file, toDoCallback) {
+      if (file && window.util.FILE_TYPES.includes(file.type)) {
+        var fileReader = new FileReader();
+
+        fileReader.addEventListener('load', toDoCallback);
+
+        fileReader.readAsDataURL(file);
+      }
     }
+
   };
 })();

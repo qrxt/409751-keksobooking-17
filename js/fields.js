@@ -2,7 +2,6 @@
 
 (function () {
   var NOT_FOR_GUESTS = 0;
-  var FILE_TYPES = ['image/gif', 'image/jpeg', 'image/pjpeg', 'image/png'];
 
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
@@ -18,7 +17,7 @@
   var adFormTimeOut = adForm.querySelector('[name="timeout"]');
   var adFormDescriptionTextarea = adForm.querySelector('#description');
 
-  var adFormAvatarImage = document.querySelector('.ad-form-header__preview img');
+  var adFormAvatarImage = adForm.querySelector('.ad-form-header__preview img');
 
   var adFormRoomsSelect = adForm.querySelector('select[name="rooms"]');
   var adFormCapacitySelect = adForm.querySelector('select[name="capacity"]');
@@ -33,9 +32,9 @@
     .querySelector('.error');
 
   var successTemplate = document
-  .querySelector('#success')
-  .content
-  .querySelector('.success');
+    .querySelector('#success')
+    .content
+    .querySelector('.success');
 
   var minPricesByHousingTypes = {
     bungalo: 0,
@@ -182,20 +181,10 @@
 
   var fileChooser = document.querySelector('.ad-form-header__input');
 
-  var uploadFile = function (file, toDoCallback) {
-    if (file && FILE_TYPES.includes(file.type)) {
-      var fileReader = new FileReader();
-
-      fileReader.addEventListener('load', toDoCallback);
-
-      fileReader.readAsDataURL(file);
-    }
-  };
-
   fileChooser.addEventListener('change', function () {
     var file = fileChooser.files[0];
 
-    uploadFile(file, function (evt) {
+    window.util.uploadFile(file, function (evt) {
       adFormAvatarImage.src = evt.target.result;
     });
   });
@@ -204,34 +193,42 @@
 
   var avatarDropArea = document.querySelector('.ad-form-header__drop-zone');
 
-  var preventDragNDropDefaults = function (dropArea) {
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (evtName) {
-      dropArea.addEventListener(evtName, function (evt) {
-        evt.preventDefault();
-      });
-    });
-  };
-
-  preventDragNDropDefaults(avatarDropArea);
+  window.util.preventDragNDropDefaults(avatarDropArea);
   avatarDropArea.addEventListener('drop', function (evt) {
     var file = evt.dataTransfer.files[0];
 
-    uploadFile(file, function (loadEvt) {
+    window.util.uploadFile(file, function (loadEvt) {
       adFormAvatarImage.src = loadEvt.target.result;
     });
   });
 
   /* Drag-n-drop загрузка аватарки WIP */
 
-  var housingImagesDropArea = document.querySelector('.ad-form__drop-zone');
-  var housingImagesAreaTest = document.querySelector('.ad-form__photo');
+  var adFormHousingImagesDropArea = adForm.querySelector('.ad-form__drop-zone');
 
-  preventDragNDropDefaults(housingImagesDropArea);
-  housingImagesDropArea.addEventListener('drop', function (evt) {
-    var file = evt.dataTransfer.files[0];
+  var adFormHousingImagesContainer = document.querySelector('.ad-form__photo-container');
 
-    uploadFile(file, function (loadEvt) {
-      housingImagesAreaTest.style.backgroundImage = loadEvt.target.result;
+  var clearHousingImagesArea = function () {
+    adFormHousingImagesContainer
+      .querySelectorAll('.ad-form__photo')
+      .forEach(function (housingImage) {
+        adFormHousingImagesContainer.removeChild(housingImage);
+      });
+  };
+
+  window.util.preventDragNDropDefaults(adFormHousingImagesDropArea);
+  adFormHousingImagesDropArea.addEventListener('drop', function (evt) {
+    var files = evt.dataTransfer.files;
+
+    // clearHousingImagesArea();
+    Array.from(files).forEach(function (file) {
+      window.util.uploadFile(file, function (loadEvt) {
+        var housingImage = new window.HousingImage(loadEvt.target.result);
+
+        adFormHousingImagesContainer.appendChild(housingImage.render());
+      });
     });
+
+
   });
 })();
