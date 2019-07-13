@@ -195,7 +195,30 @@
     });
   });
 
-  /* Загрузка аватара */
+  /* Установка поведения Drag-n-drop для изображений жилища */
+
+  var initHousingImagesDragNDropBehavior = function (renderedHousingImage) {
+    renderedHousingImage.addEventListener('dragstart', function (evt) {
+      evt.dataTransfer.effectAllowed = 'move';
+      evt.dataTransfer.setData('text/plain', null);
+      current = renderedHousingImage;
+    });
+
+    window.util.preventDragNDropDefaults(renderedHousingImage);
+    renderedHousingImage.addEventListener('drop', function (evt) {
+      if (evt.offsetX > Math.floor(evt.target.offsetWidth / 2)) {
+        if (evt.target.nextElementSibling) {
+          window.util.insertAfter(current, evt.target);
+        } else {
+          evt.target.parentNode.appendChild(current);
+        }
+      } else {
+        evt.target.parentNode.insertBefore(current, evt.target);
+      }
+    });
+  };
+
+  /* fileChooser Загрузка аватара */
 
   var avatarFileChooser = adForm.querySelector('.ad-form-header__input');
 
@@ -220,11 +243,13 @@
     });
   });
 
-  /* Загрузка изображений жилища */
+  /* fileChooser загрузка изображений жилища */
 
   var adFormHousingImagesContainer = document.querySelector('.ad-form__photo-container');
 
   var housingImagesFileChooser = adForm.querySelector('.ad-form__input');
+
+  var current;
 
   housingImagesFileChooser.addEventListener('change', function () {
     var file = housingImagesFileChooser.files[0];
@@ -232,12 +257,16 @@
     window.util.uploadFile(file, function (loadEvt) {
       var housingImage = new window.HousingImage(loadEvt.target.result);
 
+      var rendered = housingImage.render();
+
+      initHousingImagesDragNDropBehavior(rendered);
+
       document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
-      adFormHousingImagesContainer.appendChild(housingImage.render());
+      adFormHousingImagesContainer.appendChild(rendered);
     });
   });
 
-  /* Drag-n-drop загрузка аватарки */
+  /* Drag-n-drop загрузка изображения жилища */
 
   var adFormHousingImagesDropArea = adForm.querySelector('.ad-form__drop-zone');
 
@@ -249,7 +278,10 @@
       window.util.uploadFile(file, function (loadEvt) {
         var housingImage = new window.HousingImage(loadEvt.target.result);
 
-        adFormHousingImagesContainer.appendChild(housingImage.render());
+        var rendered = housingImage.render();
+
+        initHousingImagesDragNDropBehavior(rendered);
+        adFormHousingImagesContainer.appendChild(rendered);
       });
     });
 
@@ -257,7 +289,4 @@
   });
 
   /* Drag-n-drop для сортировки изображений жилища */
-
-
-
 })();
