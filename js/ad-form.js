@@ -197,15 +197,34 @@
 
   /* Установка поведения Drag-n-drop для изображений жилища */
 
+  var resetImageBacklight = function (image) {
+    image.style.boxShadow = '';
+  };
+
   var initHousingImagesDragNDropBehavior = function (renderedHousingImage) {
+    window.util.preventDragNDropDefaults(renderedHousingImage);
     renderedHousingImage.addEventListener('dragstart', function (evt) {
       evt.dataTransfer.effectAllowed = 'move';
       evt.dataTransfer.setData('text/plain', null);
       current = renderedHousingImage;
     });
 
-    window.util.preventDragNDropDefaults(renderedHousingImage);
+    renderedHousingImage.addEventListener('dragover', function (evt) {
+      if (evt.target !== current) {
+        if (evt.offsetX > Math.floor(evt.target.offsetWidth / 2)) {
+          evt.target.style.boxShadow = '3px 0px 0px 0px #ff5635';
+        } else {
+          evt.target.style.boxShadow = '-3px 0px 0px 0px #ff5635';
+        }
+      }
+    });
+
+    renderedHousingImage.addEventListener('dragleave', function (evt) {
+      resetImageBacklight(evt.target);
+    });
+
     renderedHousingImage.addEventListener('drop', function (evt) {
+      resetImageBacklight(evt.target);
       if (evt.offsetX > Math.floor(evt.target.offsetWidth / 2)) {
         if (evt.target.nextElementSibling) {
           window.util.insertAfter(current, evt.target);

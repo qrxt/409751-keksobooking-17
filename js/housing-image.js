@@ -22,7 +22,6 @@
 
     this.element.addEventListener('dragend', function () {
       context.element.style.opacity = '';
-      // context.element.parentNode.appendChild(context.element);
     });
 
     return this.element;
