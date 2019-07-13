@@ -237,7 +237,7 @@
     });
   });
 
-  /* Drag-n-drop загрузка аватарки WIP */
+  /* Drag-n-drop загрузка аватарки */
 
   var adFormHousingImagesDropArea = adForm.querySelector('.ad-form__drop-zone');
 
@@ -255,4 +255,9 @@
 
     document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
   });
+
+  /* Drag-n-drop для сортировки изображений жилища */
+
+
+
 })();
