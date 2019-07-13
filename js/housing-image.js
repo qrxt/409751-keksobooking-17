@@ -10,6 +10,7 @@
   };
 
   HousingImage.prototype.render = function () {
+    this.element.style.display = 'block';
     this.element.style.backgroundSize = 'cover';
     this.element.style.backgroundImage = 'url("' + this._img + '")';
 

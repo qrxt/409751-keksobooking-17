@@ -62,6 +62,7 @@
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (evtName) {
         dropArea.addEventListener(evtName, function (evt) {
           evt.preventDefault();
+          evt.stopPropagation();
         });
       });
     },

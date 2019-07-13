@@ -177,12 +177,30 @@
 
   resetBtn.addEventListener('click', resetPageState);
 
+  /* Подсветка для областей загрузки файлов при drag-n-drop */
+
+  var dropZonesLabels = adForm.querySelectorAll('.ad-form-header__drop-zone, .ad-form__drop-zone');
+
+  dropZonesLabels.forEach(function (zone) {
+    window.util.preventDragNDropDefaults(zone);
+
+    zone.addEventListener('dragenter', function () {
+      zone.style.color = '#ff5635';
+    });
+
+    ['dragleave', 'drop'].forEach(function (dragEvt) {
+      zone.addEventListener(dragEvt, function () {
+        zone.style.color = '';
+      });
+    });
+  });
+
   /* Загрузка аватара */
 
-  var fileChooser = document.querySelector('.ad-form-header__input');
+  var avatarFileChooser = adForm.querySelector('.ad-form-header__input');
 
-  fileChooser.addEventListener('change', function () {
-    var file = fileChooser.files[0];
+  avatarFileChooser.addEventListener('change', function () {
+    var file = avatarFileChooser.files[0];
 
     window.util.uploadFile(file, function (evt) {
       adFormAvatarImage.src = evt.target.result;
@@ -202,25 +220,31 @@
     });
   });
 
-  /* Drag-n-drop загрузка аватарки WIP */
-
-  var adFormHousingImagesDropArea = adForm.querySelector('.ad-form__drop-zone');
+  /* Загрузка изображений жилища */
 
   var adFormHousingImagesContainer = document.querySelector('.ad-form__photo-container');
 
-  var clearHousingImagesArea = function () {
-    adFormHousingImagesContainer
-      .querySelectorAll('.ad-form__photo')
-      .forEach(function (housingImage) {
-        adFormHousingImagesContainer.removeChild(housingImage);
-      });
-  };
+  var housingImagesFileChooser = adForm.querySelector('.ad-form__input');
+
+  housingImagesFileChooser.addEventListener('change', function () {
+    var file = housingImagesFileChooser.files[0];
+
+    window.util.uploadFile(file, function (loadEvt) {
+      var housingImage = new window.HousingImage(loadEvt.target.result);
+
+      document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
+      adFormHousingImagesContainer.appendChild(housingImage.render());
+    });
+  });
+
+  /* Drag-n-drop загрузка аватарки WIP */
+
+  var adFormHousingImagesDropArea = adForm.querySelector('.ad-form__drop-zone');
 
   window.util.preventDragNDropDefaults(adFormHousingImagesDropArea);
   adFormHousingImagesDropArea.addEventListener('drop', function (evt) {
     var files = evt.dataTransfer.files;
 
-    // clearHousingImagesArea();
     Array.from(files).forEach(function (file) {
       window.util.uploadFile(file, function (loadEvt) {
         var housingImage = new window.HousingImage(loadEvt.target.result);
@@ -229,6 +253,6 @@
       });
     });
 
-
+    document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
   });
 })();
