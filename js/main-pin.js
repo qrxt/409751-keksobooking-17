@@ -12,7 +12,9 @@
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
 
-  var mapRightBoundaryX = mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
+  var getMapRightBoundaryX = function () {
+    return mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
+  };
 
   var fillAddressWithCurrentCoords = function () {
     var pinMainCenterX = mapPinMain.offsetLeft + Math.round(mapPinMain.offsetWidth / 2);
@@ -59,7 +61,7 @@
       };
 
       var isInLeftBoundary = shiftedPin.x > 0 - (mapPinMain.offsetWidth / 2);
-      var isInRightBoundary = shiftedPin.x < mapRightBoundaryX + mapPinMain.offsetWidth / 2;
+      var isInRightBoundary = shiftedPin.x < getMapRightBoundaryX() + mapPinMain.offsetWidth / 2;
       var isInTopBoundary = shiftedPin.y > window.util.MIN_AVAILABLE_Y - mapPinMain.offsetHeight;
       var isInBottomBoundary = shiftedPin.y < window.util.MAX_AVAILABLE_Y;
 
@@ -91,8 +93,8 @@
         mapPinMain.style.left = 0 + 'px';
       }
 
-      if (mapPinMain.offsetLeft > mapRightBoundaryX) {
-        mapPinMain.style.left = mapRightBoundaryX + 'px';
+      if (mapPinMain.offsetLeft > getMapRightBoundaryX()) {
+        mapPinMain.style.left = getMapRightBoundaryX() + 'px';
       }
 
       if (mapPinMain.offsetTop < window.util.MIN_AVAILABLE_Y - mapPinMain.offsetHeight) {
