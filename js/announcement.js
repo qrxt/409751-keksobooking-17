@@ -135,6 +135,7 @@
       var filteredAnnouncements = applyAllFilters(announcements);
 
       clearPinsArea();
+      window.clearCardsArea();
       mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
     };
 
