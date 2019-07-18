@@ -92,8 +92,12 @@
     }
   };
 
+  var onSelectChange = function () {
+    validateRoomsQuantityToCapacity();
+  };
+
   [adFormRoomsSelect, adFormCapacitySelect].forEach(function (select) {
-    select.addEventListener('change', validateRoomsQuantityToCapacity);
+    select.addEventListener('change', onSelectChange);
   });
   validateRoomsQuantityToCapacity();
 
@@ -135,37 +139,52 @@
 
       send(function () {
         var success = successTemplate.cloneNode(true);
+
         var removeSuccessMessage = function () {
-          main.removeChild(success);
-          success.removeEventListener('click', removeSuccessMessage);
+          var successMessage = main.querySelector('.success');
+          if (successMessage) {
+            main.removeChild(successMessage);
+          }
         };
-        var removeSuccessMessageByKeyboard = function (keydownEvt) {
+
+        var onSuccessClick = function () {
+          removeSuccessMessage();
+          success.removeEventListener('click', onSuccessClick);
+        };
+
+        var onSuccessEscKeydown = function (keydownEvt) {
           if (keydownEvt.keyCode === window.util.KeyCodes.ESC) {
-            main.removeChild(success);
-            document.removeEventListener('keydown', removeSuccessMessageByKeyboard);
+            removeSuccessMessage();
+            document.removeEventListener('keydown', onSuccessEscKeydown);
           }
         };
 
         resetPageState();
 
-        success.addEventListener('click', removeSuccessMessage);
-        document.addEventListener('keydown', removeSuccessMessageByKeyboard);
+        success.addEventListener('click', onSuccessClick);
+        document.addEventListener('keydown', onSuccessEscKeydown);
         main.appendChild(success);
       }, function () {
         var error = errorTemplate.cloneNode(true);
         var removeErrorMessage = function () {
-          main.removeChild(error);
-          error.removeEventListener('click', removeErrorMessage);
-        };
-        var removeErrorMessageByKeyboard = function (keydownEvt) {
-          if (keydownEvt.keyCode === window.util.KeyCodes.ESC) {
+          var errorMessage = main.querySelector('.error');
+          if (errorMessage) {
             main.removeChild(error);
-            document.removeEventListener('keydown', removeErrorMessageByKeyboard);
+          }
+        };
+        var onErrorClick = function () {
+          removeErrorMessage();
+          document.removeEventListener('keydown', onErrorClick);
+        };
+        var onErrorEscKeydown = function (keydownEvt) {
+          if (keydownEvt.keyCode === window.util.KeyCodes.ESC) {
+            removeErrorMessage();
+            document.removeEventListener('keydown', onErrorEscKeydown);
           }
         };
 
-        error.addEventListener('click', removeErrorMessage);
-        document.addEventListener('keydown', removeErrorMessageByKeyboard);
+        error.addEventListener('click', onErrorClick);
+        document.addEventListener('keydown', onErrorEscKeydown);
         main.appendChild(error);
       });
     } else {
@@ -175,7 +194,11 @@
 
   /* Мануальный сброс состояния страницы */
 
-  resetBtn.addEventListener('click', resetPageState);
+  var onResetBtnClick = function () {
+    resetPageState();
+  };
+
+  resetBtn.addEventListener('click', onResetBtnClick);
 
   /* Подсветка для областей загрузки файлов при drag-n-drop */
 
@@ -306,6 +329,4 @@
 
     document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
   });
-
-  /* Drag-n-drop для сортировки изображений жилища */
 })();

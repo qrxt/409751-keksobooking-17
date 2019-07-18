@@ -70,7 +70,9 @@
       if (file && window.util.FILE_TYPES.includes(file.type)) {
         var fileReader = new FileReader();
 
-        fileReader.addEventListener('load', toDoCallback);
+        fileReader.addEventListener('load', function (evt) {
+          toDoCallback(evt);
+        });
 
         fileReader.readAsDataURL(file);
       }

@@ -112,22 +112,22 @@
     this._photos.appendChild(this._constructPhotosList());
 
     var closeBtn = this.element.querySelector('.popup__close');
-    var onClickClose = function () {
+    var onCloseBtnClick = function () {
       context._parent.removeChild(context.element);
-      closeBtn.removeEventListener('click', onClickClose);
+      closeBtn.removeEventListener('click', onCloseBtnClick);
     };
-    var onEscClose = function (evt) {
+    var onCloseBtnEscKeydown = function (evt) {
       if (evt.keyCode === window.util.KeyCodes.ESC) {
         var cards = context._parent.querySelectorAll('.map__card');
         cards.forEach(function (card) {
           context._parent.removeChild(card);
         });
-        document.removeEventListener('keydown', onEscClose);
+        document.removeEventListener('keydown', onCloseBtnEscKeydown);
       }
     };
 
-    closeBtn.addEventListener('click', onClickClose);
-    document.addEventListener('keydown', onEscClose);
+    closeBtn.addEventListener('click', onCloseBtnClick);
+    document.addEventListener('keydown', onCloseBtnEscKeydown);
 
     return this.element;
   };

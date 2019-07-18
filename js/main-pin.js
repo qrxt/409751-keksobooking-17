@@ -87,6 +87,7 @@
         }
       });
 
+
       fillAddressWithCurrentCoords();
 
       if (mapPinMain.offsetLeft < 0) {
@@ -109,16 +110,16 @@
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    var drawPins = function () {
-      window.drawFilteredAnnouncements();
-      mapPinMain.removeEventListener('mouseup', drawPins);
-    };
-
-    mapPinMain.addEventListener('mouseup', drawPins);
-
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var onMapPinMouseUp = function () {
+    window.drawFilteredAnnouncements();
+    mapPinMain.removeEventListener('mouseup', onMapPinMouseUp);
+  };
+
+  mapPinMain.addEventListener('mouseup', onMapPinMouseUp);
 
   /* Exports */
   window.resetMainPinPosition = function () {
