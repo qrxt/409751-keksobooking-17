@@ -16,13 +16,13 @@
     return mapPinsArea.offsetWidth - mapPinMain.offsetWidth;
   };
 
-  var fillAddressWithCurrentCoords = function () {
+  var fillAddressWithCurrentCoordinates = function () {
     var pinMainCenterX = mapPinMain.offsetLeft + Math.round(mapPinMain.offsetWidth / 2);
     var pinMainBottomY = mapPinMain.offsetTop + mapPinMain.offsetHeight;
-    var coordsString = pinMainCenterX + ', ' + pinMainBottomY;
+    var coordinatesString = pinMainCenterX + ', ' + pinMainBottomY;
 
     var adFormAddressInput = adForm.querySelector('input[name="address"]');
-    adFormAddressInput.value = coordsString;
+    adFormAddressInput.value = coordinatesString;
   };
 
   /* Блокировка главного пина до загрузки данных с сервера */
@@ -37,12 +37,12 @@
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var cursorStartCoords = {
+    var cursorStartCoordinates = {
       x: evt.clientX,
       y: evt.clientY
     };
 
-    var pinStartCoords = {
+    var pinStartCoordinates = {
       x: mapPinMain.offsetLeft,
       y: mapPinMain.offsetTop
     };
@@ -51,13 +51,13 @@
       moveEvt.preventDefault();
 
       var cursorShift = {
-        x: moveEvt.clientX - cursorStartCoords.x,
-        y: moveEvt.clientY - cursorStartCoords.y
+        x: moveEvt.clientX - cursorStartCoordinates.x,
+        y: moveEvt.clientY - cursorStartCoordinates.y
       };
 
       var shiftedPin = {
-        x: pinStartCoords.x + cursorShift.x,
-        y: pinStartCoords.y + cursorShift.y
+        x: pinStartCoordinates.x + cursorShift.x,
+        y: pinStartCoordinates.y + cursorShift.y
       };
 
       var isInLeftBoundary = shiftedPin.x > 0 - (mapPinMain.offsetWidth / 2);
@@ -73,7 +73,7 @@
         mapPinMain.style.top = shiftedPin.y + 'px';
       }
 
-      fillAddressWithCurrentCoords();
+      fillAddressWithCurrentCoordinates();
     };
 
     var onMouseUp = function (upEvt) {
@@ -88,7 +88,7 @@
       });
 
 
-      fillAddressWithCurrentCoords();
+      fillAddressWithCurrentCoordinates();
 
       if (mapPinMain.offsetLeft < 0) {
         mapPinMain.style.left = 0 + 'px';
@@ -115,8 +115,7 @@
   });
 
   var onMapPinMouseUp = function () {
-    window.drawFilteredAnnouncements();
-    mapPinMain.removeEventListener('mouseup', onMapPinMouseUp);
+    window.announcement.drawFilteredAnnouncements();
   };
 
   mapPinMain.addEventListener('mouseup', onMapPinMouseUp);
@@ -125,6 +124,6 @@
   window.resetMainPinPosition = function () {
     mapPinMain.style.left = mapPinMainStartX + 'px';
     mapPinMain.style.top = mapPinMainStartY + 'px';
-    fillAddressWithCurrentCoords();
+    fillAddressWithCurrentCoordinates();
   };
 })();

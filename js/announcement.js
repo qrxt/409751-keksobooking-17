@@ -1,7 +1,13 @@
 'use strict';
 
 (function () {
-  var MAX_ANNOUNCEMENT_PRICE = 1000000;
+  var LOW_PRICE_BOTTOM_LIMIT = 0;
+  var LOW_PRICE_TOP_LIMIT = 9999;
+  var MEDIUM_PRICE_BOTTOM_LIMIT = 10000;
+  var MEDIUM_PRICE_TOP_LIMIT = 49999;
+  var HIGH_PRICE_BOTTOM_LIMIT = 50000;
+  var HIGH_PRICE_TOP_LIMIT = 1000000;
+
   var DEBOUNCE_INTERVAL = 500;
   var MAX_PINS_QUANTITY = 5;
 
@@ -47,9 +53,9 @@
             var pin = new window.Pin(announcement);
             var renderedPin = pin.render();
             renderedPin.addEventListener('click', function () {
-              var card = new window.Card(announcement);
+              var card = new window.card.Card(announcement);
 
-              window.clearCardsArea();
+              window.card.clearCardsArea();
               mapPinsArea.appendChild(card.render());
             });
             fragment.appendChild(renderedPin);
@@ -77,9 +83,11 @@
 
       var filterByRooms = function (data) {
         var currentControlValue = housingRoomsSelect.value;
+
         if (currentControlValue === 'any') {
           return data;
         }
+
         return data.filter(function (announcement) {
           return announcement.offer.rooms === Number(currentControlValue);
         });
@@ -88,9 +96,9 @@
       var filterByPrice = function (data) {
         var currentControlValue = housingPriceSelect.value;
         var inPriceRangePredicates = {
-          'low': window.util.inRange(0, 9999),
-          'middle': window.util.inRange(10000, 49999),
-          'high': window.util.inRange(50000, MAX_ANNOUNCEMENT_PRICE),
+          'low': window.util.isInRange(LOW_PRICE_BOTTOM_LIMIT, LOW_PRICE_TOP_LIMIT),
+          'middle': window.util.isInRange(MEDIUM_PRICE_BOTTOM_LIMIT, MEDIUM_PRICE_TOP_LIMIT),
+          'high': window.util.isInRange(HIGH_PRICE_BOTTOM_LIMIT, HIGH_PRICE_TOP_LIMIT),
         };
         if (currentControlValue === 'any') {
           return data;
@@ -121,7 +129,7 @@
           }, []);
 
         return data.filter(function (announcement) {
-          return window.util.includesArr(announcement.offer.features, currentFeatures);
+          return window.util.includesArray(announcement.offer.features, currentFeatures);
         });
       };
 
@@ -131,7 +139,7 @@
         var filteredAnnouncements = applyAllFilters(announcements);
 
         clearPinsArea();
-        window.clearCardsArea();
+        window.card.clearCardsArea();
         mapPinsArea.appendChild(getPinsFragment(filteredAnnouncements));
       };
 
@@ -143,10 +151,11 @@
         });
       });
 
-      /* Exports */
-      window.clearPinsArea = clearPinsArea;
-      window.initialPinsFragment = getPinsFragment(announcements);
-      window.drawFilteredAnnouncements = drawFilteredAnnouncements;
+      /* Export namespace */
+      window.announcement = {
+        clearPinsArea: clearPinsArea,
+        drawFilteredAnnouncements: drawFilteredAnnouncements
+      };
     }, function () {
       var errorElement = errorTemplate.cloneNode(true);
 

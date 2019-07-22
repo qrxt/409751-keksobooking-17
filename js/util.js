@@ -14,12 +14,12 @@
     },
     FILE_TYPES: ['image/gif', 'image/jpeg', 'image/pjpeg', 'image/png'],
 
-    getRandomArrayItem: function (arr) {
-      return arr[Math.round(Math.random() * (arr.length - 1))];
+    getRandomArrayItem: function (array) {
+      return array[Math.round(Math.random() * (array.length - 1))];
     },
     getRandomInteger: function (min, max) {
-      var rand = min + Math.random() * (max + 1 - min);
-      return Math.floor(rand);
+      var random = min + Math.random() * (max + 1 - min);
+      return Math.floor(random);
     },
     makeAvatarPathString: function (index) {
       var expandedIndex = (index < 10) ? '0' + index : index;
@@ -38,12 +38,12 @@
           }, data);
       };
     },
-    inRange: function (low, high) {
+    isInRange: function (low, high) {
       return function (value) {
         return value >= low && value <= high;
       };
     },
-    includesArr: function (haystack, needle) {
+    includesArray: function (haystack, needle) {
       return needle.every(function (item) {
         return haystack.indexOf(item) > -1;
       });

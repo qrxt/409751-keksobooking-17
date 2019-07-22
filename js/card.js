@@ -7,6 +7,13 @@
   var map = document.querySelector('.map');
   var mapPinsArea = map.querySelector('.map__pins');
 
+  var announcementTypes = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец',
+  };
+
   var Card = function (announcement) {
     this.announcement = announcement;
     this._template = document
@@ -26,13 +33,6 @@
     this._description = this.element.querySelector('.popup__description');
     this._photos = this.element.querySelector('.popup__photos');
     this._avatar = this.element.querySelector('.popup__avatar');
-
-    this.announcementTypes = {
-      flat: 'Квартира',
-      bungalo: 'Бунгало',
-      house: 'Дом',
-      palace: 'Дворец',
-    };
   };
 
   Card.prototype._constructCapacityString = function () {
@@ -89,7 +89,7 @@
     this._title.textContent = this.announcement.offer.title;
     this._address.textContent = this.announcement.offer.address;
     this._price.textContent = this.announcement.offer.price + '₽/ночь';
-    this._type.textContent = this.announcementTypes[this.announcement.offer.type];
+    this._type.textContent = announcementTypes[this.announcement.offer.type];
     this._capacity.textContent = this._constructCapacityString();
     this._time.textContent = this._constructTimeString();
     this._description.textContent = this.announcement.offer.description;
@@ -112,10 +112,12 @@
     this._photos.appendChild(this._constructPhotosList());
 
     var closeBtn = this.element.querySelector('.popup__close');
+
     var onCloseBtnClick = function () {
       context._parent.removeChild(context.element);
       closeBtn.removeEventListener('click', onCloseBtnClick);
     };
+
     var onCloseBtnEscKeydown = function (evt) {
       if (evt.keyCode === window.util.KeyCodes.ESC) {
         var cards = context._parent.querySelectorAll('.map__card');
@@ -139,7 +141,9 @@
     });
   };
 
-  /* Exports */
-  window.Card = Card;
-  window.clearCardsArea = clearCardsArea;
+  /* Export namespace */
+  window.card = {
+    Card: Card,
+    clearCardsArea: clearCardsArea
+  };
 })();

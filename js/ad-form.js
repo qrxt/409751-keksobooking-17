@@ -2,6 +2,8 @@
 
 (function () {
   var NOT_FOR_GUESTS = 0;
+  var DEFAULT_ROOMS_CAPACITY = 1;
+  var DEFAULT_GUESTS_CAPACITY = 3;
 
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
@@ -108,6 +110,40 @@
     adFormTitleInput.value = '';
     adFormPriceInput.value = '';
     adFormDescriptionTextarea.value = '';
+
+    adFormCapacitySelect.value = DEFAULT_GUESTS_CAPACITY;
+    adFormRoomsSelect.value = DEFAULT_ROOMS_CAPACITY;
+
+    adFormHousingTypeSelect.value = 'flat';
+    adFormPriceInput.value = minPricesByHousingTypes['flat'];
+
+    adFormTimeIn.value = '12:00';
+    adFormTimeOut.value = '12:00';
+
+    adForm
+      .querySelectorAll('input[name="features"]')
+      .forEach(function (feature) {
+        feature.checked = false;
+      });
+
+    map
+      .querySelectorAll('.map__features input')
+      .forEach(function (mapFeature) {
+        mapFeature.checked = false;
+      });
+
+    map
+      .querySelectorAll('.map__filter')
+      .forEach(function (filter) {
+        filter.value = 'any';
+      });
+
+    adForm.querySelectorAll('.ad-form__photo')[0].style.display = 'block';
+    Array.from(adForm.querySelectorAll('.ad-form__photo'))
+      .slice(1)
+      .forEach(function (photo) {
+        photo.remove();
+      });
   };
 
   var disableFieldsets = function () {
@@ -120,8 +156,8 @@
 
   var resetPageState = function () {
     map.classList.add('map--faded');
-    window.clearPinsArea();
-    window.clearCardsArea();
+    window.announcement.clearPinsArea();
+    window.card.clearCardsArea();
     window.resetMainPinPosition();
 
     resetInputsState();
@@ -194,7 +230,9 @@
 
   /* Мануальный сброс состояния страницы */
 
-  var onResetBtnClick = function () {
+  var onResetBtnClick = function (evt) {
+    evt.preventDefault();
+
     resetPageState();
   };
 
@@ -260,12 +298,12 @@
     });
   };
 
-  /* fileChooser Загрузка аватара */
+  /* filePicker Загрузка аватара */
 
-  var avatarFileChooser = adForm.querySelector('.ad-form-header__input');
+  var avatarFilePicker = adForm.querySelector('.ad-form-header__input');
 
-  avatarFileChooser.addEventListener('change', function () {
-    var file = avatarFileChooser.files[0];
+  avatarFilePicker.addEventListener('change', function () {
+    var file = avatarFilePicker.files[0];
 
     window.util.uploadFile(file, function (evt) {
       adFormAvatarImage.src = evt.target.result;
@@ -285,16 +323,16 @@
     });
   });
 
-  /* fileChooser загрузка изображений жилища */
+  /* filePicker загрузка изображений жилища */
 
   var adFormHousingImagesContainer = document.querySelector('.ad-form__photo-container');
 
-  var housingImagesFileChooser = adForm.querySelector('.ad-form__input');
+  var housingImagesFilePicker = adForm.querySelector('.ad-form__input');
 
   var current;
 
-  housingImagesFileChooser.addEventListener('change', function () {
-    var file = housingImagesFileChooser.files[0];
+  housingImagesFilePicker.addEventListener('change', function () {
+    var file = housingImagesFilePicker.files[0];
 
     window.util.uploadFile(file, function (loadEvt) {
       var housingImage = new window.HousingImage(loadEvt.target.result);
