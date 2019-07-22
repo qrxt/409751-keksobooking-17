@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var DRAG_N_DROPS_EVENTS = ['dragenter', 'dragover', 'dragleave', 'drop'];
+
   window.util = {
     MIN_AVAILABLE_Y: 130,
     MAX_AVAILABLE_Y: 630,
@@ -59,7 +61,7 @@
       };
     },
     preventDragNDropDefaults: function (dropArea) {
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (evtName) {
+      DRAG_N_DROPS_EVENTS.forEach(function (evtName) {
         dropArea.addEventListener(evtName, function (evt) {
           evt.preventDefault();
           evt.stopPropagation();

@@ -79,6 +79,9 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
+      if (map.classList.contains('map--faded')) {
+        window.loadAnnouncements();
+      }
       map.classList.remove('map--faded');
       adForm.classList.remove('ad-form--disabled');
       adFormFieldsets.forEach(function (fieldset) {
@@ -86,7 +89,6 @@
           fieldset.disabled = false;
         }
       });
-
 
       fillAddressWithCurrentCoordinates();
 

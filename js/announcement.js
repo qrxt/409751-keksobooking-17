@@ -186,4 +186,6 @@
   };
 
   loadAnnouncements();
+
+  window.loadAnnouncements = loadAnnouncements;
 })();

@@ -6,7 +6,10 @@
   var DEFAULT_GUESTS_CAPACITY = 3;
 
   var main = document.querySelector('main');
+
   var map = document.querySelector('.map');
+  var mapFeatures = map.querySelectorAll('.map__features input');
+  var mapFilters = map.querySelectorAll('.map__filter');
 
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
@@ -18,6 +21,8 @@
   var adFormTimeIn = adForm.querySelector('[name="timein"]');
   var adFormTimeOut = adForm.querySelector('[name="timeout"]');
   var adFormDescriptionTextarea = adForm.querySelector('#description');
+  var adFormFeaturesControls = adForm.querySelectorAll('input[name="features"]');
+  var adFormPhotoPlaceholder = adForm.querySelectorAll('.ad-form__photo')[0];
 
   var adFormAvatarImage = adForm.querySelector('.ad-form-header__preview img');
 
@@ -120,25 +125,19 @@
     adFormTimeIn.value = '12:00';
     adFormTimeOut.value = '12:00';
 
-    adForm
-      .querySelectorAll('input[name="features"]')
-      .forEach(function (feature) {
-        feature.checked = false;
-      });
+    adFormFeaturesControls.forEach(function (feature) {
+      feature.checked = false;
+    });
 
-    map
-      .querySelectorAll('.map__features input')
-      .forEach(function (mapFeature) {
-        mapFeature.checked = false;
-      });
+    mapFeatures.forEach(function (mapFeature) {
+      mapFeature.checked = false;
+    });
 
-    map
-      .querySelectorAll('.map__filter')
-      .forEach(function (filter) {
-        filter.value = 'any';
-      });
+    mapFilters.forEach(function (filter) {
+      filter.value = 'any';
+    });
 
-    adForm.querySelectorAll('.ad-form__photo')[0].style.display = 'block';
+    adFormPhotoPlaceholder.style.display = 'block';
     Array.from(adForm.querySelectorAll('.ad-form__photo'))
       .slice(1)
       .forEach(function (photo) {
@@ -341,7 +340,7 @@
 
       initHousingImagesDragNDropBehavior(rendered);
 
-      document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
+      adFormPhotoPlaceholder.style.display = 'none';
       adFormHousingImagesContainer.appendChild(rendered);
     });
   });
@@ -365,6 +364,6 @@
       });
     });
 
-    document.querySelectorAll('.ad-form__photo')[0].style.display = 'none';
+    adFormPhotoPlaceholder.style.display = 'none';
   });
 })();
